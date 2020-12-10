@@ -1,11 +1,11 @@
 # binance_order_book
 
-A Binance Order Book Example
+Binance Order Book Example
 
 ## Requirements
 
 - C++17 compiller. It was tested on Apple clang version 12.0.0
-- Any OS. It was tested on macOS
+- Any OS. Although it was tested on macOS only
 - CMake
 
 ## Compilation
@@ -53,5 +53,5 @@ killall -SIGUSR1 binance_order_book
 Run Unit tests:
 
 ```bash
-./test/binance_order_book
+./test/test_binance_order_book
 ```

@@ -12,7 +12,7 @@ TEST_CASE("Parsing speed test")
     using namespace std::chrono_literals;
     Stopwatch sw;
     OrderBook book;
-    std::ifstream input("../../binance-btcusdt.jsonl"); // Please fix the filepath if it differs on your system
+    std::ifstream input("binance-btcusdt.jsonl"); // Please fix the filepath if it differs on your system
     nlohmann::json j;
     // TODO: try a faster json parser implementation
     std::string line;
