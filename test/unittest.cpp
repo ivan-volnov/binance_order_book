@@ -13,16 +13,23 @@ TEST_CASE("Parsing speed test")
     Stopwatch sw;
     OrderBook book;
     std::ifstream input("binance-btcusdt.jsonl"); // Please fix the filepath if it differs on your system
-    nlohmann::json j;
+    nlohmann::json json;
     // TODO: try a faster json parser implementation
+    uint64_t U, u{};
     std::string line;
     while (std::getline(input, line)) {
-        j = nlohmann::json::parse(line).at("data");
-        auto &bids = j.at("b");
+        json = nlohmann::json::parse(line).at("data");
+        U = json.at("U").get<uint64_t>();
+        if (!u) {
+            u = U - 1; // TODO: use lastUpdateId from depth snapshot
+        }
+        REQUIRE(u + 1 == U);
+        u = json.at("u").get<uint64_t>();
+        auto &bids = json.at("b");
         for (const auto &value : bids) {
             book.set_bid(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
         }
-        auto &asks = j.at("a");
+        auto &asks = json.at("a");
         for (const auto &value : asks) {
             book.set_ask(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
         }

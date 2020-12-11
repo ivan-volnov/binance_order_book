@@ -33,12 +33,21 @@ bool Application::parse_commandline_arguments(int argc, char **argv)
 void Application::run()
 {
     std::signal(SIGUSR1, Application::signal_handler);
-    nlohmann::json j;
+    nlohmann::json json;
+    uint64_t U, u{};
     std::string line;
     while (std::getline(std::cin, line)) {
-        j = nlohmann::json::parse(line).at("data");
-        auto &bids = j.at("b");
-        auto &asks = j.at("a");
+        json = nlohmann::json::parse(line).at("data");
+        U = json.at("U").get<uint64_t>();
+        if (!u) {
+            u = U - 1; // TODO: use lastUpdateId from depth snapshot
+        }
+        if (u + 1 != U) {
+            throw std::runtime_error("Wrong stream data update ID");
+        }
+        u = json.at("u").get<uint64_t>();
+        auto &bids = json.at("b");
+        auto &asks = json.at("a");
         std::lock_guard guard(_book_mutex);
         for (const auto &value : bids) {
             _book.set_bid(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
