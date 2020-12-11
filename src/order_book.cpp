@@ -1,5 +1,6 @@
 #include "order_book.hpp"
 #include <iostream>
+#include <iomanip>
 
 
 
@@ -73,7 +74,7 @@ std::ostream &operator<<(std::ostream &os, const OrderBook &book)
         }
         os << ']';
     };
-    os << '{';
+    os << std::setprecision(8) << std::fixed << '{';
     if (book._is_reverse) {
         print_map('b', book._bids.begin(), book._bids.end());
         os << ',';
