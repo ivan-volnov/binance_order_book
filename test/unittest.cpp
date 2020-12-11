@@ -33,6 +33,7 @@ TEST_CASE("Parsing speed test")
         for (const auto &value : asks) {
             book.set_ask(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
         }
+        book.set_update_ts(json.at("E").get<uint64_t>());
     }
     REQUIRE(sw.elapsed() < 1500ms);
 }

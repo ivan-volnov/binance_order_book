@@ -55,6 +55,7 @@ void Application::run()
         for (const auto &value : asks) {
             _book.set_ask(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
         }
+        _book.set_update_ts(json.at("E").get<uint64_t>());
     }
 }
 

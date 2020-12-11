@@ -35,6 +35,11 @@ void OrderBook::set_ask(double price, double amount)
     }
 }
 
+void OrderBook::set_update_ts(uint64_t update_ts)
+{
+    _update_ts = update_ts;
+}
+
 void OrderBook::set_depth(uint64_t depth)
 {
     if ((_depth = depth)) {
