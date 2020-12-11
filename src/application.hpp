@@ -2,7 +2,6 @@
 #define APPLICATION_H
 
 #include "order_book.hpp"
-#include <string>
 #include <mutex>
 
 
@@ -29,7 +28,6 @@ private:
     Application() = default;
 
 private:
-    std::string _filename;
     OrderBook _book;
     std::mutex _book_mutex;
 };

@@ -28,26 +28,20 @@ Optional arguments:
 --help             show this help message and exit
 --reverse          show Order Book in reverse order
 --depth            limit Order Book depth (min 10)
---load             load Binance depth stream from jsonl file
 ```
 
-Prepare the data file
+Start SIGUSR1 signal flood in another terminal
 
 ```bash
-bzcat binance-btcusdt-2020-11-09T11:24:00.75639.bz2 | sed 's/^[^{]*//;$s/$//' > binance-btcusdt.jsonl
+while true; do killall -SIGUSR1 binance_order_book; sleep 0.5; done
 ```
 
-Run the app using data file
+Run the app using the data file
 
 ```bash
-./binance_order_book --depth 11 --load binance-btcusdt.jsonl
-```
-
-Type in another terminal
-
-```bash
-killall -SIGUSR1 binance_order_book
-killall -SIGUSR1 binance_order_book
+bzcat binance-btcusdt-2020-11-09T11:24:00.75639.bz2 | \
+sed 's/^[^{]*//;$s/$//' | \
+./binance_order_book --depth 11
 ```
 
 Run Unit tests:

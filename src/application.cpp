@@ -1,10 +1,7 @@
 #include "application.hpp"
 #include "libs/json.hpp"
 #include <csignal>
-#include <filesystem>
-#include <fstream>
 #include <iostream>
-#include <thread>
 
 
 
@@ -22,17 +19,11 @@ bool Application::parse_commandline_arguments(int argc, char **argv)
                 continue;
             }
         }
-        if (std::strcmp("--load", *it) == 0 && it + 1 != end) {
-            _filename = *++it;
-            continue;
-        }
-        std::cout << "Usage: " << std::filesystem::path(argv[0]).filename().string()
-                << " [options]\n\n"
+        std::cout << "Usage: binance_order_book [options]\n\n"
                    "Optional arguments:\n"
                    "--help             show this help message and exit\n"
                    "--reverse          show Order Book in reverse order\n"
                    "--depth            limit Order Book depth (min 10)\n"
-                   "--load             load Binance depth stream from jsonl file\n"
                 << std::flush;
         return false;
     }
@@ -42,16 +33,9 @@ bool Application::parse_commandline_arguments(int argc, char **argv)
 void Application::run()
 {
     std::signal(SIGUSR1, Application::signal_handler);
-    if (_filename.empty()) {
-        throw std::runtime_error("Please specify input file name");
-    }
-    std::ifstream input(_filename);
-    if (!input.is_open()) {
-        throw std::runtime_error("Can't open input file name: " + _filename);
-    }
     nlohmann::json j;
     std::string line;
-    while (std::getline(input, line)) {
+    while (std::getline(std::cin, line)) {
         j = nlohmann::json::parse(line).at("data");
         auto &bids = j.at("b");
         auto &asks = j.at("a");
@@ -63,9 +47,6 @@ void Application::run()
             _book.set_ask(std::stod(value.at(0).get<std::string>()), std::stod(value.at(1).get<std::string>()));
         }
     }
-    std::cout << "Waiting for SIGUSR1 signal for 1 minute..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(60));
-    std::cout << "The time is up. Bye" << std::endl;
 }
 
 void Application::signal_handler(int signal)
