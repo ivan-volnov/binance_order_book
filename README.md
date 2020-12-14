@@ -52,7 +52,7 @@ Run Unit tests:
 
 ## TODO
 
-- Test and chose a faster json parser implementation
+- Test and choose a faster json parser implementation
 - Use curl and libwebsockets to read binance websocket stream
-- Consider using existing project to communicate with binance API.
+- Consider using an existing project to communicate with binance API.
  For example [binance-cxx-api](https://github.com/dmikushin/binance-cxx-api)
